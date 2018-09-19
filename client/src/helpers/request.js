@@ -16,6 +16,15 @@ Request.prototype.post = function (payload){
     .then((response) => response.json());
 };
 
+Request.prototype.put = function (id){
+    return fetch (`${this.url}/${id}/complete`, {
+        method: 'PUT',
+        // body: JSON.stringify(id),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then((response) => response.json());
+};
+
 Request.prototype.delete = function (id) {
     return fetch(`${this.url}/${id}`, {
         method: 'DELETE'

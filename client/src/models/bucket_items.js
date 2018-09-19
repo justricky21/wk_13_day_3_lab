@@ -7,10 +7,14 @@ const BucketItems = function(passingUrlHereBeDumbYo){
 }
 
 BucketItems.prototype.bindEvents = function() {
+    
+    PubSub.subscribe('BucketItemView:item-to-complete', (event) => {
+        this.updateBucketItem(event.detail);
+    });
 
     PubSub.subscribe('BucketItemView:item-to-delete', (event) => {
         this.deleteBucketItem(event.detail);
-    })
+    });
 
     PubSub.subscribe('BucketItemFormView:item-submitted', (event) =>{
         console.log(event.detail);
@@ -45,4 +49,15 @@ BucketItems.prototype.deleteBucketItem = function(item){
     })
     .catch(console.error);
 }
+
+BucketItems.prototype.updateBucketItem = function(item){
+    console.log(item);
+    this.request.put(item)
+    .then((bucketList) => {
+        console.log(bucketList);
+        PubSub.publish('BucketItems:data-loaded', bucketList);
+    })
+    .catch(console.error);
+}
+
 module.exports = BucketItems;
