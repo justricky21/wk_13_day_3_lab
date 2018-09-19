@@ -3,12 +3,22 @@ const app = express();
 const path = require('path');
 const createRouter = require('./helpers/create_router.js');
 const parser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
 
 const publicPath = path.join(__dirname, '../client/public');
 app.use(express.static(publicPath));
 app.use(parser.json());
-const bucketListRouter = createRouter([{description: 'yeeee'}]);
-app.use('/api/bucketList', bucketListRouter);
+
+
+MongoClient.connect('mongodb://localhost:27017')
+.then((client) => {
+    const db = client.db('buckeroo');
+    const itemsCollection = db.collection('items');
+    const bucketListRouter = createRouter(itemsCollection);
+    app.use('/api/bucketList', bucketListRouter);
+})
+
+
 
 
 
